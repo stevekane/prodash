@@ -25,20 +25,23 @@ var reduce = function (fn, accum, obj) {
   var ks    = keys(obj)
   var len   = ks.length
   var key
+  var kv
 
   while (++index < len) {
-    key   = ks[index]
-    accum = fn(accum, obj[key])  
+    key     = ks[index]
+    kv      = {}
+    kv[key] = obj[key]
+    accum   = fn(accum, kv)
   }
   return accum
 }
 
-var map = function (fn, obj) {
-  return reduce(mapping(fn, cons), [], obj)
-}
+var map = curry(function (fn, obj) {
+  return reduce(mapping(fn, cons), {}, obj)
+})
 
-var filter = curry(function (predFn, ar) {
-  return reduce(filtering(predFn, cons), [], obj)
+var filter = curry(function (predFn, obj) {
+  return reduce(filtering(predFn, cons), {}, obj)
 })
 
 object.keys   = keys
