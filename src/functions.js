@@ -23,17 +23,15 @@ var allButFirst = function (args) { return badSlice(args, 1) }
 
 var concat = demethodize(Array.prototype, "concat")
 
-var dot = function (prop, obj) { return obj[prop] }
-
 var apply = function (fn, argsList) { return fn.apply(this, argsList) }
 
-var call = function (fn) { return fn.call(this, allButFirst(arguments)) }
+var call = function (fn) { return fn.apply(this, allButFirst(arguments)) }
 
-var bind = function (fn) { return fn.bind(this, allButFirst(arguments)) }
+var bind = function (fn, obj) { return fn.bind(obj, allButFirst(arguments)) }
 
 var compose = function (fns) {
   return function composed (val) {
-    for (var i = fns.length - 1 i >= 0 --i) {
+    for (var i = fns.length - 1; i >= 0; --i) {
       val = fns[i](val)
     }
     return val
@@ -59,7 +57,18 @@ var partial = function (fn) {
   }
 }
 
-var curry = function (fn, argsCount) {
+//utility function used in curry def
+var innerCurry = function (fn) {
+  var args = allButFirst(arguments);
+
+  return function () {
+    var innerArgs = toArray(arguments);
+
+    return apply(fn, concat(args, innerArgs));
+  };
+};
+
+var curry = function curry (fn, argsCount) {
   var fnArity = argsCount || fn.length
 
   return function curried () {
@@ -70,9 +79,9 @@ var curry = function (fn, argsCount) {
     var result
 
     if (notEnoughArgs && stillMissingArgs) {
-      result = autoCurry(apply(curry, args), missingArgsCount)
+      result = curry(apply(innerCurry, args), missingArgsCount)
     } else if (notEnoughArgs) {
-      result = apply(curry, args)
+      result = apply(innerCurry, args)
     } else {
       result = apply(fn, slice(arguments)) 
     }
@@ -85,7 +94,6 @@ fns.reverse     = reverse
 fns.slice       = slice
 fns.concat      = concat
 fns.flip        = flip
-fns.dot         = dot
 fns.compose     = compose
 fns.partial     = partial
 fns.curry       = curry
