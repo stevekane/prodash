@@ -1,0 +1,29 @@
+{
+  "name": "prodash",
+  "version": "0.0.1",
+  "description": "A functional utility library designed for composition, speed, and simplicity",
+  "main": "prodash.js",
+  "scripts": {
+    "test": "node tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/stevekane/prodash.git"
+  },
+  "keywords": [
+    "lodash",
+    "functional",
+    "composition",
+    "javascript",
+    "underscore"
+  ],
+  "author": "Steven Kane",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stevekane/prodash/issues"
+  },
+  "homepage": "https://github.com/stevekane/prodash",
+  "dependencies": {
+    "lodash": "^2.4.1"
+  }
+}
