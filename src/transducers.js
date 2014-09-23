@@ -4,14 +4,17 @@ var trans = {}
 
 var mapping = curry(function (transFn, stepFn) {
   return function (acc, x) {
-    return stepFn(r, transFn(x))
+    return stepFn(acc, transFn(x))
   }
 })
 
 var filtering = curry(function (predFn, stepFn) {
   return function (acc, x) {
-    return predFn(acc, x) ? stepFn(acc, x) : acc 
+    return predFn(x) ? stepFn(acc, x) : acc 
   }
 })
+
+trans.mapping   = mapping
+trans.filtering = filtering
 
 module.exports = trans
