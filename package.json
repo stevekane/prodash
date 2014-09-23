@@ -4,7 +4,7 @@
   "description": "A functional utility library designed for composition, speed, and simplicity",
   "main": "prodash.js",
   "scripts": {
-    "test": "node tests"
+    "test": "node test"
   },
   "repository": {
     "type": "git",
@@ -23,8 +23,8 @@
     "url": "https://github.com/stevekane/prodash/issues"
   },
   "homepage": "https://github.com/stevekane/prodash",
-  "dependencies": {
-    "lodash": "^2.4.1",
+  "dependencies": {},
+  "devDependencies": {
     "tape": "^3.0.0"
   }
 }
