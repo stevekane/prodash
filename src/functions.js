@@ -51,7 +51,7 @@ var partial = function (fn) {
 
   return function partialed () {
     var innerArgs = toArray(arguments)
-    var allArgs = concat(args, innerArgs)
+    var allArgs   = concat(args, innerArgs)
 
     return apply(fn, allArgs)
   }
@@ -68,8 +68,8 @@ var innerCurry = function (fn) {
   };
 };
 
-var curry = function curry (fn, argsCount) {
-  var fnArity = argsCount || fn.length
+var curry = function curry (fn) {
+  var fnArity = fn.length
 
   return function curried () {
     var notEnoughArgs    = arguments.length < fnArity
