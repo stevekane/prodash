@@ -32,10 +32,18 @@ var find = curry(function (predFn, ar) {
   return null
 })
 
-array.cons   = cons
-array.reduce = reduce
-array.map    = map
-array.filter = filter
-array.find   = find
+//TODO: add tests!
+var forEach = curry(function (transFn, ar) {
+  for (var i = 0; i < ar.length; ++i) {
+    transFn(ar[i]) 
+  }
+})
+
+array.cons    = cons
+array.reduce  = reduce
+array.map     = map
+array.filter  = filter
+array.find    = find
+array.forEach = forEach
 
 module.exports = array
