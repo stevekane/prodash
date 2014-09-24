@@ -3,7 +3,7 @@ var prodash = {
   transducers: require("./src/transducers"),
   array:       require("./src/array"),
   object:      require("./src/object"),
-  tree:        require("./src/tree")
+  graph:       require("./src/graph")
 }
 
 module.exports = prodash
