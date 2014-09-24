@@ -23,6 +23,15 @@ var reduce = curry(function reduce (fn, accum, node) {
   return accum
 })
 
+var reduceDeep = curry(function reduceDeep (fn, accum, node) {
+  accum = fn(accum, node)
+
+  for (var i = 0; i < node.children.length; ++i) {
+    reduce(fn, accum, node.children[i]) 
+  }
+  return accum
+})
+
 var forEach = curry(function (fn, node) {
   fn(node.value)  
 
@@ -32,9 +41,10 @@ var forEach = curry(function (fn, node) {
   return node
 })
 
-g.Node    = Node
-g.cons    = cons
-g.reduce  = reduce
-g.forEach = forEach
+g.Node       = Node
+g.cons       = cons
+g.reduce     = reduce
+g.reduceDeep = reduceDeep
+g.forEach    = forEach
 
 module.exports = g
