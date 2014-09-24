@@ -1,5 +1,5 @@
 var test   = require('tape')
-var mod    = require('../src/objects.js')
+var mod    = require('../src/object.js')
 
 var keys   = mod.keys
 var cons   = mod.cons

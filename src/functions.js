@@ -7,8 +7,8 @@ var demethodize = function (obj, fnName) {
 var reverse = function (list) {
   var backwards = []
 
-  for (var item in list) {
-    backwards.unshift(list[item]) 
+  for (var i = 0; i < list.length; ++i) {
+    backwards.unshift(list[i]) 
   }
 
   return backwards
