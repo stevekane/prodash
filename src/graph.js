@@ -27,7 +27,7 @@ var reduceDeep = curry(function reduceDeep (fn, accum, node) {
   accum = fn(accum, node)
 
   for (var i = 0; i < node.children.length; ++i) {
-    reduce(fn, accum, node.children[i]) 
+    reduceDeep(fn, accum, node.children[i]) 
   }
   return accum
 })
