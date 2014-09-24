@@ -51,7 +51,6 @@ test('map', function (t) {
   var newGraph      = map(makeRocket, root)
 
   //TODO: IMPLEMENT ACTUAL TESTS.  THIS APPEARS TO BE WORKING
-  console.log(JSON.stringify(newGraph, null, 2))
   t.plan(1)
   t.true(true)
 })
@@ -63,7 +62,6 @@ test('forEach', function (t) {
 
   //TODO: IMPLEMENT ACTUAL TESTS.  THIS APPEARS TO BE WORKING
   forEach(makeRocket, root)
-  console.log(JSON.stringify(root, null, 2))
   t.plan(1)
   t.true(true)
 })
