@@ -3,11 +3,10 @@ var curry       = fns.curry
 var g           = {}
 
 var Node = function (hash, nodes) {
-  var node = {}
-
-  node.value    = hash
-  node.children = nodes || []
-  return node
+  return {
+    value:    hash,
+    children: nodes || [] 
+  }
 }
 
 var cons = function (node, childNode) {
