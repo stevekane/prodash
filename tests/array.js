@@ -6,10 +6,12 @@ var reduce = mod.reduce
 var map    = mod.map
 var filter = mod.filter
 var find   = mod.find
+var mapcat = mod.mapcat
 
-var addOne = function (x) { return x + 1 }
-var gtOne  = function (x) { return x > 1 }
-var sum    = function (x, y) { return x + y }
+var addOne   = function (x) { return x + 1 }
+var gtOne    = function (x) { return x > 1 }
+var sum      = function (x, y) { return x + y }
+var returnAr = function (x) { return [x + 1, x + 2, x + 3] }
 
 test('cons', function (t) {
   var ar = cons([1,2], 3)
@@ -44,4 +46,11 @@ test('find', function (t) {
 
   t.plan(1)
   t.same(found, 3)
+})
+
+test('mapcat', function (t) {
+  var r = mapcat(returnAr, [1,2,3])
+
+  t.plan(1)
+  t.same(r.length, 9)
 })
