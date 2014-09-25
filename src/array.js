@@ -39,11 +39,23 @@ var forEach = curry(function (transFn, ar) {
   }
 })
 
+var flatten = function (listOfLists) {
+  var res = [] 
+
+  for (var i = 0; i < listOfLists.length; ++i) {
+    for (var j = 0; j < listOfLists[i].length; ++j) {
+      res.push(listOfLists[i][j])
+    } 
+  }
+  return res
+}
+
 array.cons    = cons
 array.reduce  = reduce
 array.map     = map
 array.filter  = filter
 array.find    = find
 array.forEach = forEach
+array.flatten = flatten
 
 module.exports = array

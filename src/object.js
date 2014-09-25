@@ -44,6 +44,15 @@ var filter = curry(function (predFn, obj) {
   return reduce(filtering(predFn, cons), {}, obj)
 })
 
+var has = curry(function (props, e) {
+  var res = true
+
+  for (var i = 0; i < props.length; ++i) {
+    res = res && e.hasOwnProperty(props[i])
+  }
+  return res
+})
+
 object.keys   = keys
 object.cons   = cons
 object.map    = map
