@@ -2,3 +2,4 @@ node_modules/
 *.swp
 *.swo
 *.orig
+npm-debug.log
