@@ -58,5 +58,6 @@ object.cons   = cons
 object.map    = map
 object.reduce = reduce
 object.filter = filter
+object.has    = has
 
 module.exports = object
