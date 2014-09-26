@@ -3,6 +3,7 @@ var hasKey   = fns.hasKey
 var curry    = fns.curry
 var compose  = fns.compose
 var extend   = fns.extend
+var push     = fns.push
 var isArray  = fns.isArray
 var isObject = fns.isObject
 var trans    = {}
@@ -26,7 +27,6 @@ var reduceArray = function (fn, accum, arr) {
   return accum
 }
 
-//each transform is passed an object with a single k and v
 var reduceObject = function (fn, accum, obj) {
   var index = -1
   var ks    = Object.keys(obj)
@@ -43,12 +43,30 @@ var reduceObject = function (fn, accum, obj) {
   return accum
 }
 
+var consArray = push
+
+var consObject = extend
+
 var reduce = curry(function (fn, accum, col) {
   if      (isArray(col))            return reduceArray(fn, accum, col)
   else if (hasKey(col, "__reduce")) return col.__reduce(fn, accum, col)
   else if (isObject(col))           return reduceObject(fn, accum, col)
   else                              throw new Error("unknown colection type")
 })
+
+var cons = curry(function (col, el) {
+  if      (isArray(col))          return consArray(col, el)
+  else if (hasKey(col, "__cons")) return col.__cons(col, el)
+  else if (isObject(col))         return consObject(col, el)
+  else                            throw new Error("unknown colection type")
+})
+
+var empty = function (col) {
+  if      (isArray(col))           return []
+  else if (hasKey(col, "__empty")) return col.__empty()
+  else if (isObject(col))          return {}
+  else                             throw new Error("unknown colection type")
+}
 
 var mapping = curry(function (transFn, stepFn) {
   return function (acc, x) {
@@ -63,6 +81,8 @@ var filtering = curry(function (predFn, stepFn) {
 })
 
 trans.reduce     = reduce
+trans.cons       = cons
+trans.empty      = empty
 trans.mapping    = mapping
 trans.filtering  = filtering
 module.exports   = trans

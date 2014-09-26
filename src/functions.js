@@ -19,8 +19,8 @@ var hasKey = function (obj, key) {
 
 var hasOwnKey = demethodize(Object, "hasOwnProperty")
 
-var cons = function (array, el) {
-  array.push(el)
+var push = function (array, el) {
+  array.push(el) 
   return array
 }
 
@@ -120,7 +120,7 @@ var isArray  = function (col) {
 
 fns.demethodize = demethodize
 fns.extend      = extend
-fns.cons        = cons
+fns.push        = push
 fns.hasKey      = hasKey
 fns.hasOwnKey   = hasOwnKey
 fns.reverse     = reverse

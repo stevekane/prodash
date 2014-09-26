@@ -3,10 +3,11 @@ var fns       = require("../src/functions")
 var mod       = require('../src/transducers')
 var graph     = require("../src/graph")
 var extend    = fns.extend
-var cons      = fns.cons
 var compose   = fns.compose
 var Node      = graph.Node
+var cons      = mod.cons
 var reduce    = mod.reduce
+var empty     = mod.empty
 var mapping   = mod.mapping
 var filtering = mod.filtering
 
@@ -91,4 +92,54 @@ test('reduce for a custom Graph data type', function (t) {
   t.plan(2)
   t.same(result[0].id, 2)
   t.same(result[1].id, 3)
+})
+
+test('cons for object', function (t) {
+  var obj   = { name: "biff" }
+  var toAdd = { age: 42 }
+
+  cons(obj, toAdd)
+  t.plan(2)
+  t.same(obj.name, "biff")
+  t.same(obj.age, 42)
+})
+
+test('cons for array', function (t) {
+  var arr   = [1,2,3]
+  var toAdd = 4
+
+  cons(arr, toAdd)
+  t.plan(2)
+  t.same(arr[3], 4)
+  t.true(arr.length === 4)
+})
+
+test('cons for custom graph data type', function (t) {
+  var g     = Node({id: 1})
+  var toAdd = Node({id: 2})
+
+  cons(g, toAdd)
+  t.plan(1)
+  t.same(g.children[0].id, 2)
+})
+
+test('empty for object', function (t) {
+  var e = empty({})
+
+  t.plan(1)
+  t.same(e, {})
+})
+
+test('empty for array', function (t) {
+  var e = empty([])
+
+  t.plan(1)
+  t.same(e, [])
+})
+
+test('empty for custom graph data type', function (t) {
+  var e = empty(Node({}))
+
+  t.plan(1)
+  t.true(e instanceof Node)
 })
