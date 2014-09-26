@@ -13,7 +13,11 @@ var extend = function (host, obj) {
   return host
 }
 
-var hasKey = demethodize(Object, "hasOwnProperty")
+var hasKey = function (obj, key) {
+  return obj[key] !== undefined
+}
+
+var hasOwnKey = demethodize(Object, "hasOwnProperty")
 
 var cons = function (array, el) {
   array.push(el)
@@ -118,6 +122,7 @@ fns.demethodize = demethodize
 fns.extend      = extend
 fns.cons        = cons
 fns.hasKey      = hasKey
+fns.hasOwnKey   = hasOwnKey
 fns.reverse     = reverse
 fns.slice       = slice
 fns.concat      = concat

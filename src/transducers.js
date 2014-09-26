@@ -17,8 +17,11 @@ var trans    = {}
  */
 
 var reduceArray = function (fn, accum, arr) {
-  for (var i = 0; i < arr.length; ++i) {
-    accum = fn(accum, arr[i]) 
+  var index = -1
+  var len   = arr.length
+
+  while (++index < len) {
+    accum = fn(accum, arr[index])
   }
   return accum
 }
@@ -36,15 +39,6 @@ var reduceObject = function (fn, accum, obj) {
     kv      = {}
     kv[key] = obj[key]
     accum   = fn(accum, kv)
-  }
-  return accum
-}
-
-var reduceNode = function (fn, accum, graph) {
-  accum = fn(accum, node)
-
-  for (var i = 0; i < node.children.length; ++i) {
-    reduceNode(fn, accum, node.children[i]) 
   }
   return accum
 }

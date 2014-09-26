@@ -1,15 +1,18 @@
 var test      = require('tape')
 var fns       = require("../src/functions")
 var mod       = require('../src/transducers')
+var graph     = require("../src/graph")
 var extend    = fns.extend
 var cons      = fns.cons
 var compose   = fns.compose
+var Node      = graph.Node
 var reduce    = mod.reduce
 var mapping   = mod.mapping
 var filtering = mod.filtering
 
 var addOne  = function (x) { return x + 1 }
 var gtOne   = function (x) { return x > 1 }
+var incId   = function (n) { n.id++; return n }
 var getVal  = function (kv) { 
   var key    = Object.keys(kv)[0]
 
@@ -75,4 +78,17 @@ test('reduce can translate object to values array', function (t) {
   t.true(contains(result, 11))
   t.true(contains(result, 14))
   t.true(contains(result, 5))
+})
+
+test('reduce for a custom Graph data type', function (t) {
+  var g      = Node({
+    id:       1,
+    children: [Node({id: 2})] 
+  }) 
+  var m      = mapping(incId)
+  var result = reduce(m(cons), [], g)
+
+  t.plan(2)
+  t.same(result[0].id, 2)
+  t.same(result[1].id, 3)
 })
