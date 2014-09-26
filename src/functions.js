@@ -24,6 +24,11 @@ var push = function (array, el) {
   return array
 }
 
+var unshift = function (array, el) {
+  array.unshift(el)
+  return array
+}
+
 var reverse = function (list) {
   var backwards = []
 
@@ -121,6 +126,7 @@ var isArray  = function (col) {
 fns.demethodize = demethodize
 fns.extend      = extend
 fns.push        = push
+fns.unshift     = unshift
 fns.hasKey      = hasKey
 fns.hasOwnKey   = hasOwnKey
 fns.reverse     = reverse

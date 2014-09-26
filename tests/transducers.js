@@ -1,18 +1,20 @@
-var test      = require('tape')
-var fns       = require("../src/functions")
-var mod       = require('../src/transducers')
-var graph     = require("../src/graph")
-var extend    = fns.extend
-var compose   = fns.compose
-var Node      = graph.Node
-var cons      = mod.cons
-var reduce    = mod.reduce
-var empty     = mod.empty
-var mapping   = mod.mapping
-var filtering = mod.filtering
+var test       = require('tape')
+var fns        = require("../src/functions")
+var mod        = require('../src/transducers')
+var graph      = require("../src/graph")
+var extend     = fns.extend
+var compose    = fns.compose
+var Node       = graph.Node
+var cons       = mod.cons
+var reduce     = mod.reduce
+var empty      = mod.empty
+var mapping    = mod.mapping
+var filtering  = mod.filtering
+var cat        = mod.cat
 
 var addOne  = function (x) { return x + 1 }
 var gtOne   = function (x) { return x > 1 }
+var ltFifty = function (x) { return x < 50 }
 var incId   = function (n) { n.id++; return n }
 var getVal  = function (kv) { 
   var key    = Object.keys(kv)[0]
@@ -142,4 +144,30 @@ test('empty for custom graph data type', function (t) {
 
   t.plan(1)
   t.true(e instanceof Node)
+})
+
+test('cat', function (t) {
+  var ar  = [[1,2], [3,4], [5,6]]
+  var res = reduce(cat(cons), [], ar)
+
+  t.plan(1)
+  t.same(res, [1,2,3,4,5,6])
+})
+
+test('bigchain with transformation', function (t) {
+  var stats = {
+    age:    32,
+    height: 64,
+    width:  108
+  }
+  var m = compose([
+    mapping(getVal),
+    filtering(ltFifty)
+  ])
+  var result = reduce(m(cons), [], stats)
+
+  console.log(result)
+
+  t.plan(1)
+  t.same(result[0], 32)
 })

@@ -80,9 +80,24 @@ var filtering = curry(function (predFn, stepFn) {
   }
 })
 
+var map = curry(function (fn, col) {
+  return reduce(mapping(fn, cons), empty(col), col)
+})
+
+var filter = curry(function (predFn, col) {
+  return reduce(filtering(predFn, cons), empty(col), col)
+})
+
+var cat = function (fn) {
+  return function (acc, x) {
+    return reduce(fn, acc, x) 
+  }
+}
+
 trans.reduce     = reduce
 trans.cons       = cons
 trans.empty      = empty
 trans.mapping    = mapping
+trans.cat        = cat
 trans.filtering  = filtering
 module.exports   = trans
