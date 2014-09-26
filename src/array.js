@@ -2,6 +2,8 @@ var transducers = require("./transducers")
 var fns         = require("./functions")
 var mapping     = transducers.mapping
 var filtering   = transducers.filtering
+var catting     = transducers.catting
+var mapcatting  = transducers.mapcatting
 var curry       = fns.curry
 var compose     = fns.compose
 var array       = {}
@@ -18,6 +20,7 @@ var reduce = curry(function (fn, accum, ar) {
   return accum
 })
 
+//TODO should probably have recursive def for arbitrary nesting
 var flatten = function (listOfLists) {
   var res = [] 
 
@@ -37,10 +40,6 @@ var filter = curry(function (predFn, ar) {
   return reduce(filtering(predFn, cons), [], ar)
 })
 
-var mapcat = curry(function (fn, ar) {
-  return compose([flatten, map(fn)])(ar)
-})
-
 var find = curry(function (predFn, ar) {
   for (var i = 0; i < ar.length; ++i) {
     if (predFn(ar[i])) return ar[i] 
@@ -55,13 +54,18 @@ var forEach = curry(function (transFn, ar) {
   }
 })
 
-array.cons    = cons
-array.reduce  = reduce
-array.map     = map
-array.filter  = filter
-array.find    = find
-array.forEach = forEach
-array.flatten = flatten
-array.mapcat  = mapcat
+var mapcattingA = mapcatting(reduce, [], map)
+
+var cattingA = catting(reduce, [])
+
+array.cons         = cons
+array.reduce       = reduce
+array.map          = map
+array.filter       = filter
+array.find         = find
+array.forEach      = forEach
+array.flatten      = flatten
+array.mapcattingA  = mapcattingA
+array.cattingA     = cattingA
 
 module.exports = array

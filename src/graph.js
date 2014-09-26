@@ -1,17 +1,12 @@
 var fns         = require("./functions")
-var array       = require("./array")
-var consA       = array.cons
 var curry       = fns.curry
+var extend      = fns.extend
 var g           = {}
 
-var Node = function (hash, nodes) {
-  hash.children = nodes || []
-  return hash
-}
-
-var cons = function (node, childNode) {
-  node.children.push(childNode)
-  return node
+var Node = function (hash) {
+  if (!(this instanceof Node)) return new Node(hash)
+  extend(this, hash)
+  this.children = this.children || []
 }
 
 var reduce = curry(function reduce (fn, accum, node) {
@@ -23,28 +18,32 @@ var reduce = curry(function reduce (fn, accum, node) {
   return accum
 })
 
-var forEach = curry(function (fn, node) {
-  fn(node)  
+var cons = curry(function (node, childNode) {
+  node.children.push(childNode)
+  return node
+})
 
-  for (var i = 0; i < node.children.length; ++i) {
-    forEach(fn, node.children[i])
+var empty = function () { return Node({}) }
+
+Node.prototype.__reduce = reduce
+
+Node.prototype.__cons = cons
+
+Node.prototype.__empty = empty
+
+var attach = curry(function (node, childNode) {
+  node.children.push(childNode)
+  return node
+})
+
+var attachMany = curry(function (node, childNodes) {
+  for (var i = 0; i < childNodes.length; ++i) {
+    node.children.push(childNodes[i])   
   }
   return node
 })
 
-/*
- * Iterate over all nodes in the tree pushing them onto an array
- * Note.  This is simply a special case of the reduce function
- * where all outputs are pushed onto an array
- */
-var flatten = function (redFn, graph) {
-  return reduce(redFn(consA), [], graph)
-}
-
-g.Node       = Node
-g.cons       = cons
-g.reduce     = reduce
-g.forEach    = forEach
-g.flatten    = flatten
-
+g.Node         = Node
+g.attach       = attach
+g.attachMany   = attachMany
 module.exports = g

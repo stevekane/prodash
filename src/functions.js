@@ -4,6 +4,22 @@ var demethodize = function (obj, fnName) {
   return Function.prototype.call.bind(obj[fnName]) 
 }
 
+var extend = function (host, obj) {
+  var ks = Object.keys(obj)
+
+  for (var i = 0; i < ks.length; ++i) {
+    host[ks[i]] = obj[ks[i]]
+  }
+  return host
+}
+
+var hasKey = demethodize(Object, "hasOwnProperty")
+
+var cons = function (array, el) {
+  array.push(el)
+  return array
+}
+
 var reverse = function (list) {
   var backwards = []
 
@@ -89,7 +105,19 @@ var curry = function curry (fn) {
   }
 }
 
+var isObject = function (x) {
+  return x instanceof Object &&
+    Object.getPrototypeOf(x) === Object.getPrototypeOf({});
+}
+
+var isArray  = function (col) {
+  return col instanceof Array
+}
+
 fns.demethodize = demethodize
+fns.extend      = extend
+fns.cons        = cons
+fns.hasKey      = hasKey
 fns.reverse     = reverse
 fns.slice       = slice
 fns.concat      = concat
@@ -100,4 +128,6 @@ fns.curry       = curry
 fns.bind        = bind
 fns.call        = call
 fns.apply       = apply
+fns.isObject    = isObject
+fns.isArray     = isArray
 module.exports  = fns
