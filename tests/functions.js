@@ -82,6 +82,16 @@ test('curry', function (t) {
   t.same(player, "Steve Jackson")
 })
 
+test('curry varying args', function (t) {
+  var addAll = curry(function (a,b,c,d,e) {
+    return a + b + c + d + e 
+  })
+  var result = addAll(1)(2,3)(4)(5)
+
+  t.plan(1)
+  t.same(result, 15)
+})
+
 test('bind', function (t) {
   var obj = { 
     name: "bort",

@@ -83,34 +83,30 @@ var partial = function (fn) {
 }
 
 //utility function used in curry def
-var innerCurry = function (fn) {
-  var args = allButFirst(arguments);
-
+var innerCurry = function (fn, args) {
   return function () {
-    var innerArgs = toArray(arguments);
+    for (var i = 0, startingIndex = args.length; i < arguments.length; ++i) {
+      args[i + startingIndex] = arguments[i] 
+    }
 
-    return apply(fn, concat(args, innerArgs));
+    return fn.apply(null, args);
   };
 };
 
-var curry = function curry (fn) {
-  var fnArity = fn.length
+var curry = function (fn, arity) {
+  var fnArity = arity || fn.length
 
-  return function curried () {
-    var notEnoughArgs    = arguments.length < fnArity
+  return function () {
     var missingArgsCount = fnArity - arguments.length
-    var stillMissingArgs = missingArgsCount > 0
-    var args             = concat([fn], toArray(arguments))
-    var result
+    var notEnoughArgs    = missingArgsCount > 0
+    var args             = []
 
-    if (notEnoughArgs && stillMissingArgs) {
-      result = curry(apply(innerCurry, args), missingArgsCount)
-    } else if (notEnoughArgs) {
-      result = apply(innerCurry, args)
-    } else {
-      result = apply(fn, slice(arguments)) 
+    for (var i = 0; i < arguments.length; ++i) {
+      args[i] = arguments[i] 
     }
-    return result
+
+    if (notEnoughArgs) return curry(innerCurry(fn, args), missingArgsCount)
+    else               return fn.apply(null, args)
   }
 }
 
