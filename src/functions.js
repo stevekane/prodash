@@ -72,13 +72,18 @@ var flip = function (fn) {
 var slice = flip(badSlice)
 
 var partial = function (fn) {
-  var args = slice(1, arguments)
+  var args = []
 
-  return function partialed () {
-    var innerArgs = toArray(arguments)
-    var allArgs   = concat(args, innerArgs)
+  for (var i = 0; i < arguments.length - 1; ++i) {
+    args[i] = arguments[i + 1] 
+  }
 
-    return apply(fn, allArgs)
+  return function () {
+    for (var j = 0, startingIndex = args.length; j < arguments.length; ++j) {
+      args[j + startingIndex] = arguments[j] 
+    }
+
+    return fn.apply(null, args)
   }
 }
 
@@ -93,6 +98,7 @@ var innerCurry = function (fn, args) {
   };
 };
 
+//arity argument is used most often internally
 var curry = function (fn, arity) {
   var fnArity = arity || fn.length
 
