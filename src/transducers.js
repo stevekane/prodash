@@ -57,21 +57,21 @@ var reduce = curry(function (fn, accum, col) {
   if      (instanceOf(Array, col))     return reduceArray(fn, accum, col)
   else if (col.__reduce !== undefined) return col.__reduce(fn, accum, col)
   else if (instanceOf(Object, col))    return reduceObject(fn, accum, col)
-  else                                 throw new Error("unknown colection type")
+  else                                 throw new Error("unknown collection type")
 })
 
 var cons = curry(function (col, el) {
   if      (instanceOf(Array, col))   return consArray(col, el)
   else if (col.__cons !== undefined) return col.__cons(col, el)
   else if (instanceOf(Object, col))  return consObject(col, el)
-  else                               throw new Error("unknown colection type")
+  else                               throw new Error("unknown collection type")
 })
 
 var empty = function (col) {
   if      (instanceOf(Array, col))    return []
   else if (col.__empty !== undefined) return col.__empty()
   else if (instanceOf(Object, col))   return {}
-  else                                throw new Error("unknown colection type")
+  else                                throw new Error("unknown collection type")
 }
 
 var mapping = curry(function (transFn, stepFn) {
