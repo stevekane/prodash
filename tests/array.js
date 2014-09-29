@@ -7,6 +7,7 @@ var concat      = mod.concat
 var slice       = mod.slice
 var push        = mod.push
 var unshift     = mod.unshift
+var remove      = mod.remove
 
 var addOne   = function (x) { return x + 1 }
 var gtOne    = function (x) { return x > 1 }
@@ -62,4 +63,12 @@ test('unshift', function (t) {
   unshift(ar, 4)
   t.plan(1)
   t.same(ar, [4,3,2,1])
+})
+
+test('remove', function (t) {
+  var ar = [1,2,3,4,2]
+
+  remove(function (x) { return x === 2 }, ar)
+  t.plan(1)
+  t.same(ar, [1,3,4])
 })

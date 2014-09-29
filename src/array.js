@@ -41,6 +41,15 @@ var slice = function (start, end, array) {
   return array.slice(start, end)
 }
 
+var remove = function (fn, array) {
+  for (var i = 0; i < array.length; ++i) {
+    if (fn(array[i])) {
+      array.splice(i, 1)
+    }
+  }
+  return array
+}
+
 array.find    = find
 array.forEach = forEach
 array.reverse = reverse
@@ -48,5 +57,6 @@ array.concat  = concat
 array.slice   = slice
 array.push    = push
 array.unshift = unshift
+array.remove  = remove
 
 module.exports = array
