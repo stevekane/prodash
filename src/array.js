@@ -27,6 +27,19 @@ var reverse = function (list) {
 
 var concat = demethodize(Array.prototype, "concat")
 
+var flatten = function (arrayOfArrays) {
+  var flattened = []
+  var subarray
+
+  for (var i = 0; i < arrayOfArrays.length; ++i) {
+    subarray = arrayOfArrays[i]
+    for (var j = 0; j < subarray.length; ++j) {
+      flattened.push(subarray[j]) 
+    }
+  }
+  return flattened
+}
+
 var push = function (array, el) {
   array.push(el)
   return array
@@ -54,6 +67,7 @@ array.find    = find
 array.forEach = forEach
 array.reverse = reverse
 array.concat  = concat
+array.flatten = flatten
 array.slice   = slice
 array.push    = push
 array.unshift = unshift

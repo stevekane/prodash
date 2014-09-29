@@ -4,6 +4,7 @@ var find        = mod.find
 var forEach     = mod.forEach
 var reverse     = mod.reverse
 var concat      = mod.concat
+var flatten     = mod.flatten
 var slice       = mod.slice
 var push        = mod.push
 var unshift     = mod.unshift
@@ -31,14 +32,22 @@ test('reverse', function (t) {
   var r = reverse([1,2,3,4])
 
   t.plan(1)
-  t.same([4,3,2,1], r)
+  t.same(r, [4,3,2,1])
 })
 
 test('concat', function (t) {
   var group = concat([1,2,3], 4)
 
   t.plan(1)
-  t.same([1,2,3,4], group)
+  t.same(group, [1,2,3,4])
+})
+
+test('flatten', function (t) {
+  var ar   = [[1,2,3], [4,5,6]]
+  var flat = flatten(ar)
+
+  t.plan(1)
+  t.same(flat, [1,2,3,4,5,6])
 })
 
 test('slice', function (t) {
