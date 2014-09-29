@@ -1,15 +1,14 @@
 var test       = require('tape')
 var fns        = require("../src/functions")
 var mod        = require('../src/transducers')
-var graph      = require("../src/graph")
-var extend     = fns.extend
 var compose    = fns.compose
-var Node       = graph.Node
 var cons       = mod.cons
 var reduce     = mod.reduce
 var empty      = mod.empty
 var mapping    = mod.mapping
 var filtering  = mod.filtering
+var map        = mod.map
+var filter     = mod.filter
 var cat        = mod.cat
 
 var addOne  = function (x) { return x + 1 }
@@ -21,6 +20,13 @@ var getVal  = function (kv) {
 
   return kv[key]
 }
+
+var valOverFifty = function (kv) {
+  var key = Object.keys(kv)[0]
+
+  return kv[key] > 50
+}
+
 var bumpVal = function (kv) { 
   var result = {}
   var key    = Object.keys(kv)[0]
@@ -28,6 +34,7 @@ var bumpVal = function (kv) {
   result[key] = kv[key] + 1
   return result
 }
+
 var contains = function (ar, el) {
   for (var i = 0; i < ar.length; ++i) {
     if (el === ar[i]) return true
@@ -64,7 +71,7 @@ test('reduce for array', function (t) {
 })
 
 test('reduce for object', function (t) {
-  var m      = mapping(bumpVal, extend)
+  var m      = mapping(bumpVal, cons)
   var obj    = { age: 10 }
   var result = reduce(m, {}, obj)
 
@@ -81,19 +88,6 @@ test('reduce can translate object to values array', function (t) {
   t.true(contains(result, 11))
   t.true(contains(result, 14))
   t.true(contains(result, 5))
-})
-
-test('reduce for a custom Graph data type', function (t) {
-  var g      = Node({
-    id:       1,
-    children: [Node({id: 2})] 
-  }) 
-  var m      = mapping(incId)
-  var result = reduce(m(cons), [], g)
-
-  t.plan(2)
-  t.same(result[0].id, 2)
-  t.same(result[1].id, 3)
 })
 
 test('cons for object', function (t) {
@@ -116,15 +110,6 @@ test('cons for array', function (t) {
   t.true(arr.length === 4)
 })
 
-test('cons for custom graph data type', function (t) {
-  var g     = Node({id: 1})
-  var toAdd = Node({id: 2})
-
-  cons(g, toAdd)
-  t.plan(1)
-  t.same(g.children[0].id, 2)
-})
-
 test('empty for object', function (t) {
   var e = empty({})
 
@@ -138,14 +123,6 @@ test('empty for array', function (t) {
   t.plan(1)
   t.same(e, [])
 })
-
-test('empty for custom graph data type', function (t) {
-  var e = empty(Node({}))
-
-  t.plan(1)
-  t.true(e instanceof Node)
-})
-
 test('cat', function (t) {
   var ar  = [[1,2], [3,4], [5,6]]
   var res = reduce(cat(cons), [], ar)
@@ -166,8 +143,47 @@ test('bigchain with transformation', function (t) {
   ])
   var result = reduce(m(cons), [], stats)
 
-  console.log(result)
-
   t.plan(1)
   t.same(result[0], 32)
+})
+
+test('map for array', function (t) {
+  var ar    = [1,2,3]
+  var newAr = map(addOne, ar)
+
+  t.plan(1)
+  t.same([2,3,4], newAr)
+})
+
+test('map for object', function (t) {
+  var obj = {
+    age:    42,
+    height: 58 
+  }
+  var newObj = map(bumpVal, obj)
+
+  t.plan(1)
+  t.same(newObj, {
+    age:    43,
+    height: 59 
+  })
+})
+
+test('filter for array', function (t) {
+  var ar    = [100,20,3]
+  var newAr = filter(ltFifty, ar)
+
+  t.plan(1)
+  t.same(newAr, [20, 3])
+})
+
+test('filter for object', function (t) {
+  var obj = {
+    height: 50,
+    weight: 100
+  }
+  var newObj = filter(valOverFifty, obj)
+
+  t.plan(1)
+  t.same(newObj, { weight: 100 })
 })

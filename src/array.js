@@ -1,44 +1,7 @@
-var transducers = require("./transducers")
 var fns         = require("./functions")
-var mapping     = transducers.mapping
-var filtering   = transducers.filtering
-var catting     = transducers.catting
-var mapcatting  = transducers.mapcatting
 var curry       = fns.curry
-var compose     = fns.compose
+var demethodize = fns.demethodize
 var array       = {}
-
-var cons = function (ar, x) {
-  ar.push(x)
-  return ar
-}
-
-var reduce = curry(function (fn, accum, ar) {  
-  for (var i = 0; i < ar.length; ++i) {
-    accum = fn(accum, ar[i]) 
-  }
-  return accum
-})
-
-//TODO should probably have recursive def for arbitrary nesting
-var flatten = function (listOfLists) {
-  var res = [] 
-
-  for (var i = 0; i < listOfLists.length; ++i) {
-    for (var j = 0; j < listOfLists[i].length; ++j) {
-      res.push(listOfLists[i][j])
-    } 
-  }
-  return res
-}
-
-var map = curry(function (fn, ar) {
-  return reduce(mapping(fn, cons), [], ar)
-})
-
-var filter = curry(function (predFn, ar) {
-  return reduce(filtering(predFn, cons), [], ar)
-})
 
 var find = curry(function (predFn, ar) {
   for (var i = 0; i < ar.length; ++i) {
@@ -47,25 +10,43 @@ var find = curry(function (predFn, ar) {
   return null
 })
 
-//TODO: add tests!
 var forEach = curry(function (transFn, ar) {
   for (var i = 0; i < ar.length; ++i) {
-    transFn(ar[i]) 
+    ar[i] = transFn(ar[i]) 
   }
 })
 
-var mapcattingA = mapcatting(reduce, [], map)
+var reverse = function (list) {
+  var backwards = []
 
-var cattingA = catting(reduce, [])
+  for (var i = 0, len = list.length; i < len; ++i) {
+    backwards[i] = list[len-1-i]
+  }
+  return backwards
+}
 
-array.cons         = cons
-array.reduce       = reduce
-array.map          = map
-array.filter       = filter
-array.find         = find
-array.forEach      = forEach
-array.flatten      = flatten
-array.mapcattingA  = mapcattingA
-array.cattingA     = cattingA
+var concat = demethodize(Array.prototype, "concat")
+
+var push = function (array, el) {
+  array.push(el)
+  return array
+}
+
+var unshift = function (array, el) {
+  array.unshift(el)
+  return array
+}
+
+var slice = function (start, end, array) {
+  return array.slice(start, end)
+}
+
+array.find    = find
+array.forEach = forEach
+array.reverse = reverse
+array.concat  = concat
+array.slice   = slice
+array.push    = push
+array.unshift = unshift
 
 module.exports = array

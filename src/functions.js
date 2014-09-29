@@ -4,55 +4,22 @@ var demethodize = function (obj, fnName) {
   return Function.prototype.call.bind(obj[fnName]) 
 }
 
-var extend = function (host, obj) {
-  var ks = Object.keys(obj)
+var instanceOf = function (constructor, col) { 
+  return col instanceof constructor
+}
 
-  for (var i = 0; i < ks.length; ++i) {
-    host[ks[i]] = obj[ks[i]]
+var apply = function (fn, argsList) { 
+  return fn.apply(this, argsList) 
+}
+
+var call = function (fn) { 
+  var args = []
+
+  for (var i = 0; i < arguments.length - 1; ++i) {
+    args[i] = arguments[i + 1] 
   }
-  return host
+  return fn.apply(this, args) 
 }
-
-var hasKey = function (obj, key) {
-  return obj[key] !== undefined
-}
-
-var hasOwnKey = demethodize(Object, "hasOwnProperty")
-
-var push = function (array, el) {
-  array.push(el) 
-  return array
-}
-
-var unshift = function (array, el) {
-  array.unshift(el)
-  return array
-}
-
-var reverse = function (list) {
-  var backwards = []
-
-  for (var i = 0; i < list.length; ++i) {
-    backwards.unshift(list[i]) 
-  }
-
-  return backwards
-}
-
-//don't export?  just used in definitions
-var badSlice = demethodize(Array.prototype, "slice")
-
-var toArray = function (args) { return badSlice(args, 0) }
-
-var allButFirst = function (args) { return badSlice(args, 1) }
-
-var concat = demethodize(Array.prototype, "concat")
-
-var apply = function (fn, argsList) { return fn.apply(this, argsList) }
-
-var call = function (fn) { return fn.apply(this, allButFirst(arguments)) }
-
-var bind = function (fn, obj) { return fn.bind(obj, allButFirst(arguments)) }
 
 var compose = function (fns) {
   return function composed (val) {
@@ -65,11 +32,14 @@ var compose = function (fns) {
 
 var flip = function (fn) {
   return function () {
-    return apply(fn, reverse(badSlice(arguments)))
+    var backwards = []
+
+    for (var i = 0, len = arguments.length; i < len; ++i) {
+      backwards[i] = arguments[len-1-i]
+    }
+    return apply(fn, backwards)
   }
 }
-
-var slice = flip(badSlice)
 
 var partial = function (fn) {
   var args = []
@@ -116,31 +86,12 @@ var curry = function (fn, arity) {
   }
 }
 
-var isObject = function (x) {
-  return x instanceof Object &&
-    Object.getPrototypeOf(x) === Object.getPrototypeOf({});
-}
-
-var isArray  = function (col) {
-  return col instanceof Array
-}
-
 fns.demethodize = demethodize
-fns.extend      = extend
-fns.push        = push
-fns.unshift     = unshift
-fns.hasKey      = hasKey
-fns.hasOwnKey   = hasOwnKey
-fns.reverse     = reverse
-fns.slice       = slice
-fns.concat      = concat
+fns.instanceOf  = instanceOf
 fns.flip        = flip
 fns.compose     = compose
 fns.partial     = partial
 fns.curry       = curry
-fns.bind        = bind
 fns.call        = call
 fns.apply       = apply
-fns.isObject    = isObject
-fns.isArray     = isArray
 module.exports  = fns

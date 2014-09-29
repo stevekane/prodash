@@ -1,12 +1,8 @@
-var fns      = require("./functions")
-var hasKey   = fns.hasKey
-var curry    = fns.curry
-var compose  = fns.compose
-var extend   = fns.extend
-var push     = fns.push
-var isArray  = fns.isArray
-var isObject = fns.isObject
-var trans    = {}
+var fns        = require("./functions")
+var curry      = fns.curry
+var compose    = fns.compose
+var instanceOf = fns.instanceOf
+var trans      = {}
 
 /*
  * TODO: implement reduce for types and possible base reduce for adding types?
@@ -43,29 +39,39 @@ var reduceObject = function (fn, accum, obj) {
   return accum
 }
 
-var consArray = push
+var consArray = function (array, el) {
+  array.push(el)
+  return array
+}
 
-var consObject = extend
+var consObject = function (host, obj) {
+  var ks = Object.keys(obj)
+
+  for (var i = 0; i < ks.length; ++i) {
+    host[ks[i]] = obj[ks[i]]
+  }
+  return host
+}
 
 var reduce = curry(function (fn, accum, col) {
-  if      (isArray(col))            return reduceArray(fn, accum, col)
-  else if (hasKey(col, "__reduce")) return col.__reduce(fn, accum, col)
-  else if (isObject(col))           return reduceObject(fn, accum, col)
-  else                              throw new Error("unknown colection type")
+  if      (instanceOf(Array, col))     return reduceArray(fn, accum, col)
+  else if (col.__reduce !== undefined) return col.__reduce(fn, accum, col)
+  else if (instanceOf(Object, col))    return reduceObject(fn, accum, col)
+  else                                 throw new Error("unknown colection type")
 })
 
 var cons = curry(function (col, el) {
-  if      (isArray(col))          return consArray(col, el)
-  else if (hasKey(col, "__cons")) return col.__cons(col, el)
-  else if (isObject(col))         return consObject(col, el)
-  else                            throw new Error("unknown colection type")
+  if      (instanceOf(Array, col))   return consArray(col, el)
+  else if (col.__cons !== undefined) return col.__cons(col, el)
+  else if (instanceOf(Object, col))  return consObject(col, el)
+  else                               throw new Error("unknown colection type")
 })
 
 var empty = function (col) {
-  if      (isArray(col))           return []
-  else if (hasKey(col, "__empty")) return col.__empty()
-  else if (isObject(col))          return {}
-  else                             throw new Error("unknown colection type")
+  if      (instanceOf(Array, col))    return []
+  else if (col.__empty !== undefined) return col.__empty()
+  else if (instanceOf(Object, col))   return {}
+  else                                throw new Error("unknown colection type")
 }
 
 var mapping = curry(function (transFn, stepFn) {
@@ -94,10 +100,12 @@ var cat = function (fn) {
   }
 }
 
-trans.reduce     = reduce
-trans.cons       = cons
-trans.empty      = empty
-trans.mapping    = mapping
-trans.cat        = cat
-trans.filtering  = filtering
-module.exports   = trans
+trans.reduce    = reduce
+trans.cons      = cons
+trans.empty     = empty
+trans.mapping   = mapping
+trans.filtering = filtering
+trans.map       = map
+trans.filter    = filter
+trans.cat       = cat
+module.exports  = trans

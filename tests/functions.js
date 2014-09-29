@@ -1,16 +1,11 @@
 var test        = require('tape')
 var mod         = require('../src/functions.js')
-
 var demethodize = mod.demethodize
-var reverse     = mod.reverse
-var slice       = mod.slice
-var concat      = mod.concat
+var instanceOf  = mod.instanceOf
 var flip        = mod.flip
-var dot         = mod.dot
 var compose     = mod.compose
 var partial     = mod.partial
 var curry       = mod.curry
-var bind        = mod.bind
 var call        = mod.call
 var apply       = mod.apply
 
@@ -26,26 +21,13 @@ test('demethodize', function (t) {
   t.same([1,2,3,4], group)
 })
 
-test('reverse', function (t) {
-  var r = reverse([1,2,3,4])
+test('instanceOf', function (t) {
+  var obj = {}
+  var arr = []
 
-  t.plan(1)
-  t.same([4,3,2,1], r)
-})
-
-test('slice', function (t) {
-  var ar  = [1,2,3]
-  var sub = slice(1, ar)
-
-  t.plan(1)
-  t.same(sub, [2,3])
-})
-
-test('concat', function (t) {
-  var group = concat([1,2,3], 4)
-
-  t.plan(1)
-  t.same([1,2,3,4], group)
+  t.plan(2)
+  t.true(instanceOf(Object, obj))
+  t.true(instanceOf(Array, arr))
 })
 
 test('flip', function (t) {
@@ -90,17 +72,6 @@ test('curry varying args', function (t) {
 
   t.plan(1)
   t.same(result, 15)
-})
-
-test('bind', function (t) {
-  var obj = { 
-    name: "bort",
-    printName: function () { return this.name }
-  }
-  var print = bind(obj.printName, obj)
-
-  t.plan(1)
-  t.same(print(), "bort")
 })
 
 test('call', function (t) {
