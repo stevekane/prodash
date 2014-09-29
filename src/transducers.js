@@ -45,10 +45,12 @@ var consObject = function (host, obj) {
 }
 
 var reduce = curry(function (fn, accum, col) {
-  if      (instanceOf(Array, col))     return reduceArray(fn, accum, col)
-  else if (col.__reduce !== undefined) return col.__reduce(fn, accum, col)
-  else if (instanceOf(Object, col))    return reduceObject(fn, accum, col)
-  else                                 throw new Error("unknown collection type")
+  if      (instanceOf(Array, col))        return reduceArray(fn, accum, col)
+  else if (instanceOf(Float32Array, col)) return reduceArray(fn, accum, col)
+  else if (instanceOf(Uint32Array, col))  return reduceArray(fn, accum, col)
+  else if (col.__reduce !== undefined)    return col.__reduce(fn, accum, col)
+  else if (instanceOf(Object, col))       return reduceObject(fn, accum, col)
+  else                                    throw new Error("unknown collection type")
 })
 
 var cons = curry(function (col, el) {
@@ -59,10 +61,12 @@ var cons = curry(function (col, el) {
 })
 
 var empty = function (col) {
-  if      (instanceOf(Array, col))    return []
-  else if (col.__empty !== undefined) return col.__empty()
-  else if (instanceOf(Object, col))   return {}
-  else                                throw new Error("unknown collection type")
+  if      (instanceOf(Array, col))        return []
+  else if (instanceOf(Float32Array, col)) return new Float32Array
+  else if (instanceOf(Uint32Array, col))  return new Uint32Array
+  else if (col.__empty !== undefined)     return col.__empty()
+  else if (instanceOf(Object, col))       return {}
+  else                                    throw new Error("unknown collection type")
 }
 
 var mapping = curry(function (transFn, stepFn) {
