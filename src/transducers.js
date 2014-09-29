@@ -4,15 +4,6 @@ var compose    = fns.compose
 var instanceOf = fns.instanceOf
 var trans      = {}
 
-/*
- * TODO: implement reduce for types and possible base reduce for adding types?
- *       implement map and filter generically in terms of reduce
- *       implement cons for types
- *       restructure code to include special cases or possibly eliminate?
- *       add tests for type check functions in functions.js
- *       add tests for new functions and add tests for any missing functions
- */
-
 var reduceArray = function (fn, accum, arr) {
   var index = -1
   var len   = arr.length
@@ -96,6 +87,10 @@ var map = curry(function (fn, col) {
   return reduce(mapping(fn, cons), empty(col), col)
 })
 
+var mapcatting = function (transFn, stepFn) {
+  return compose([cat, mapping(transFn)])(stepFn)
+}
+
 var filter = curry(function (predFn, col) {
   return reduce(filtering(predFn, cons), empty(col), col)
 })
@@ -112,15 +107,16 @@ var into = curry(function (to, transFn, from) {
   return transduce(transFn, cons, to, from)
 })
 
-trans.reduce    = reduce
-trans.cons      = cons
-trans.empty     = empty
-trans.mapping   = mapping
-trans.cat       = cat
-trans.filtering = filtering
-trans.map       = map
-trans.filter    = filter
-trans.transduce = transduce
-trans.sequence  = sequence
-trans.into      = into
-module.exports  = trans
+trans.reduce     = reduce
+trans.cons       = cons
+trans.empty      = empty
+trans.mapping    = mapping
+trans.cat        = cat
+trans.filtering  = filtering
+trans.map        = map
+trans.mapcatting = mapcatting
+trans.filter     = filter
+trans.transduce  = transduce
+trans.sequence   = sequence
+trans.into       = into
+module.exports   = trans

@@ -9,6 +9,7 @@ var mapping    = mod.mapping
 var filtering  = mod.filtering
 var cat        = mod.cat
 var map        = mod.map
+var mapcatting = mod.mapcatting
 var filter     = mod.filter
 var transduce  = mod.transduce
 var sequence   = mod.sequence
@@ -125,12 +126,22 @@ test('empty for array', function (t) {
   t.plan(1)
   t.same(e, [])
 })
+
 test('cat', function (t) {
   var ar  = [[1,2], [3,4], [5,6]]
   var res = reduce(cat(cons), [], ar)
 
   t.plan(1)
   t.same(res, [1,2,3,4,5,6])
+})
+
+test('mapcatting', function (t) {
+  var ar  = [[1,2], [3,4], [5,6]]
+  var res = reduce(mapcatting(addOne, cons), [], ar)
+
+  console.log(res)
+  t.plan(1)
+  t.same(res, [2,3,4,5,6,7])
 })
 
 test('bigchain with transformation', function (t) {
