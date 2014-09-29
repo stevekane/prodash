@@ -2,6 +2,15 @@ var fns         = require("./functions")
 var curry       = fns.curry
 var object      = {}
 
+var extend = curry(function (host, obj) {
+  var ks = Object.keys(obj)
+
+  for (var i = 0; i < ks.length; ++i) {
+    host[ks[i]] = obj[ks[i]]
+  }
+  return host
+})
+
 var hasKey = curry(function (key, e) {
   return e[key] !== undefined
 })
@@ -17,5 +26,6 @@ var hasKeys = curry(function (keys, e) {
 
 object.hasKey  = hasKey
 object.hasKeys = hasKeys
+object.extend  = extend
 
 module.exports = object

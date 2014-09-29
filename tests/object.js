@@ -25,3 +25,19 @@ test('hasKeys', function (t) {
   t.true(hasKeys(['name', 'age'], obj))
   t.false(hasKeys(['school', 'name'], obj))
 })
+
+test('extend', function (t) {
+  var player = {
+    size: 10 
+  }
+  var attrs = {
+    name: "Steven",
+    age:  10
+  }
+
+  extend(player, attrs)
+  t.plan(3)
+  t.same(player.size, 10)
+  t.same(player.name, "Steven")
+  t.same(player.age, 10)
+})
