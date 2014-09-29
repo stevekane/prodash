@@ -87,9 +87,9 @@ var map = curry(function (fn, col) {
   return reduce(mapping(fn, cons), empty(col), col)
 })
 
-var mapcatting = function (transFn, stepFn) {
+var mapcatting = curry(function (transFn, stepFn) {
   return compose([cat, mapping(transFn)])(stepFn)
-}
+})
 
 var filter = curry(function (predFn, col) {
   return reduce(filtering(predFn, cons), empty(col), col)
