@@ -8,6 +8,7 @@ var empty      = mod.empty
 var mapping    = mod.mapping
 var plucking   = mod.plucking
 var filtering  = mod.filtering
+var checking   = mod.checking
 var cat        = mod.cat
 var map        = mod.map
 var mapcatting = mod.mapcatting
@@ -71,6 +72,16 @@ test('filtering', function (t) {
   t.plan(2)
   t.true(typeof f === "function")
   t.same(r1, [5])
+})
+
+test('checking', function (t) {
+  var f  = checking("living", true, cons)
+  var r1 = f([], {living: true})
+  var r2 = f([], {living: false})
+
+  t.plan(2)
+  t.same(r1, [{living: true}])
+  t.same(r2, [])
 })
 
 test('reduce for array', function (t) {
@@ -148,7 +159,6 @@ test('mapcatting', function (t) {
   var ar  = [[1,2], [3,4], [5,6]]
   var res = reduce(mapcatting(addOne, cons), [], ar)
 
-  console.log(res)
   t.plan(1)
   t.same(res, [2,3,4,5,6,7])
 })

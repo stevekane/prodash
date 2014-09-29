@@ -76,17 +76,17 @@ var mapping = curry(function (transFn, stepFn) {
 })
 
 var plucking = curry(function (propName, stepFn) {
-  var transFn = function (x) { return x[propName] }
-
-  return function (acc, x) {
-    return stepFn(acc, transFn(x))
-  }
+  return mapping(function (x) { return x[propName] }, stepFn)
 })
 
 var filtering = curry(function (predFn, stepFn) {
   return function (acc, x) {
     return predFn(x) ? stepFn(acc, x) : acc 
   }
+})
+
+var checking = curry(function (prop, val, stepFn) {
+  return filtering(function (x) { return x[prop] === val }, stepFn)
 })
 
 var cat = function (fn) {
@@ -126,6 +126,7 @@ trans.mapping    = mapping
 trans.plucking   = plucking
 trans.cat        = cat
 trans.filtering  = filtering
+trans.checking   = checking
 trans.map        = map
 trans.mapcatting = mapcatting
 trans.filter     = filter
