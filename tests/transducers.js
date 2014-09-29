@@ -7,9 +7,12 @@ var reduce     = mod.reduce
 var empty      = mod.empty
 var mapping    = mod.mapping
 var filtering  = mod.filtering
+var cat        = mod.cat
 var map        = mod.map
 var filter     = mod.filter
-var cat        = mod.cat
+var transduce  = mod.transduce
+var sequence   = mod.sequence
+var into       = mod.into
 
 var addOne  = function (x) { return x + 1 }
 var gtOne   = function (x) { return x > 1 }
@@ -54,7 +57,6 @@ test('mapping', function (t) {
 test('filtering', function (t) {
   var f  = filtering(gtOne, cons)
   var r1 = f([], 5)
-  var r2 = f([r1], 1)
 
   t.plan(2)
   t.true(typeof f === "function")
@@ -186,4 +188,46 @@ test('filter for object', function (t) {
 
   t.plan(1)
   t.same(newObj, { weight: 100 })
+})
+
+test('transduce from obj to array', function (t) {
+  var stats = {
+    age:    32,
+    height: 64,
+    width:  108
+  }
+  var m = compose([
+    mapping(getVal),
+    filtering(ltFifty)
+  ])
+  var result = transduce(m, cons, [], stats)
+
+  t.plan(1)
+  t.same(result[0], 32)
+})
+
+test('sequence', function (t) {
+  var ar    = [1,2,3]
+  var newAr = sequence(mapping(addOne), ar)
+
+  t.plan(1)
+  t.same([2,3,4], newAr)
+})
+
+test('into', function (t) {
+  var bigValues = {
+    radius: 10000,
+    weight: 29381,
+  }
+  var properties = {
+    age:        517128,
+    importance: 32,
+    power:      11
+  }
+
+  into(bigValues, filtering(valOverFifty), properties)
+  t.plan(3)
+  t.same(bigValues.age, properties.age)
+  t.true(bigValues.importance === undefined)
+  t.true(bigValues.power === undefined)
 })

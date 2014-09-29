@@ -86,6 +86,12 @@ var filtering = curry(function (predFn, stepFn) {
   }
 })
 
+var cat = function (fn) {
+  return function (acc, x) {
+    return reduce(fn, acc, x) 
+  }
+}
+
 var map = curry(function (fn, col) {
   return reduce(mapping(fn, cons), empty(col), col)
 })
@@ -94,18 +100,27 @@ var filter = curry(function (predFn, col) {
   return reduce(filtering(predFn, cons), empty(col), col)
 })
 
-var cat = function (fn) {
-  return function (acc, x) {
-    return reduce(fn, acc, x) 
-  }
-}
+var transduce = curry(function (transFn, stepFn, init, col) {
+  return reduce(transFn(stepFn), init, col)
+})
+
+var sequence = curry(function (transFn, col) {
+  return reduce(transFn(cons), empty(col), col)
+})
+
+var into = curry(function (to, transFn, from) {
+  return transduce(transFn, cons, to, from)
+})
 
 trans.reduce    = reduce
 trans.cons      = cons
 trans.empty     = empty
 trans.mapping   = mapping
+trans.cat       = cat
 trans.filtering = filtering
 trans.map       = map
 trans.filter    = filter
-trans.cat       = cat
+trans.transduce = transduce
+trans.sequence  = sequence
+trans.into      = into
 module.exports  = trans
