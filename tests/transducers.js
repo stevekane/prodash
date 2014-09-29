@@ -6,6 +6,7 @@ var cons       = mod.cons
 var reduce     = mod.reduce
 var empty      = mod.empty
 var mapping    = mod.mapping
+var plucking   = mod.plucking
 var filtering  = mod.filtering
 var cat        = mod.cat
 var map        = mod.map
@@ -53,6 +54,14 @@ test('mapping', function (t) {
   t.plan(2)
   t.true(typeof m === "function")
   t.same(r, [6])
+})
+
+test('plucking', function (t) {
+  var m = plucking("position", cons)
+  var r = m([], {position: 45})
+
+  t.plan(1)
+  t.same(r, [45])
 })
 
 test('filtering', function (t) {

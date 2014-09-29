@@ -71,6 +71,14 @@ var mapping = curry(function (transFn, stepFn) {
   }
 })
 
+var plucking = curry(function (propName, stepFn) {
+  var transFn = function (x) { return x[propName] }
+
+  return function (acc, x) {
+    return stepFn(acc, transFn(x))
+  }
+})
+
 var filtering = curry(function (predFn, stepFn) {
   return function (acc, x) {
     return predFn(x) ? stepFn(acc, x) : acc 
@@ -111,6 +119,7 @@ trans.reduce     = reduce
 trans.cons       = cons
 trans.empty      = empty
 trans.mapping    = mapping
+trans.plucking   = plucking
 trans.cat        = cat
 trans.filtering  = filtering
 trans.map        = map
