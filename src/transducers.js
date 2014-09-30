@@ -4,6 +4,8 @@ var compose    = fns.compose
 var instanceOf = fns.instanceOf
 var trans      = {}
 
+var redIdentity = function (acc, x) { return x }
+
 var reduceArray = function (fn, accum, arr) {
   var index = -1
   var len   = arr.length
@@ -89,6 +91,14 @@ var checking = curry(function (prop, val, stepFn) {
   return filtering(function (x) { return x[prop] === val }, stepFn)
 })
 
+//THIS WILL MUTATE THE STRUCTURE PROVIDED TO IT DIRECTLY
+var mutating = curry(function (mutFn, stepFn) {
+  return function (acc, x) {
+    mutFn(x)
+    return stepFn(acc, x)
+  }
+})
+
 var cat = function (fn) {
   return function (acc, x) {
     return reduce(fn, acc, x) 
@@ -105,6 +115,10 @@ var mapcatting = curry(function (transFn, stepFn) {
 
 var filter = curry(function (predFn, col) {
   return reduce(filtering(predFn, cons), empty(col), col)
+})
+
+var mutate = curry(function (transFn, col) {
+  return reduce(transFn(redIdentity), undefined, col)
 })
 
 var transduce = curry(function (transFn, stepFn, init, col) {
@@ -129,6 +143,8 @@ trans.filtering  = filtering
 trans.checking   = checking
 trans.map        = map
 trans.mapcatting = mapcatting
+trans.mutating   = mutating
+trans.mutate     = mutate
 trans.filter     = filter
 trans.transduce  = transduce
 trans.sequence   = sequence

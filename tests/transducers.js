@@ -12,10 +12,12 @@ var checking   = mod.checking
 var cat        = mod.cat
 var map        = mod.map
 var mapcatting = mod.mapcatting
+var mutating   = mod.mutating
 var filter     = mod.filter
 var transduce  = mod.transduce
 var sequence   = mod.sequence
 var into       = mod.into
+var mutate     = mod.mutate
 
 var addOne  = function (x) { return x + 1 }
 var gtOne   = function (x) { return x > 1 }
@@ -40,6 +42,10 @@ var bumpVal = function (kv) {
   result[key] = kv[key] + 1
   return result
 }
+
+var olderThanTwo   = function (e) { return e.age > 2 }
+var age            = function (e) { e.age++ }
+var capitalizeName = function (e) { e.name = e.name.toUpperCase() }
 
 var contains = function (ar, el) {
   for (var i = 0; i < ar.length; ++i) {
@@ -163,6 +169,37 @@ test('mapcatting', function (t) {
   t.same(res, [2,3,4,5,6,7])
 })
 
+test('mutating', function (t) {
+  var obj = {
+    age:    21,
+    height: 23,
+    weight: 40
+  }
+  var noop = function () {}
+  mutating(age, noop)(undefined, obj)
+
+  t.plan(1)
+  t.same(obj.age, 22)
+})
+
+test('mutating used in chain', function (t) {
+  var objects = [
+    {age: 1, name: "Steve"}, 
+    {age: 2, name: "Lynn"}, 
+    {age: 3, name: "Brian"}
+  ]
+  var identity  = function (acc, e) { return e }
+  var removeOld = filtering(olderThanTwo)
+  var bumpAge   = mutating(age)
+  var capName   = mutating(capitalizeName)
+  var transform = compose([removeOld, bumpAge, capName])
+
+  reduce(transform(identity), [], objects) 
+  t.plan(2)
+  t.same(objects[2].age, 4)
+  t.same(objects[2].name, "BRIAN")
+})
+
 test('bigchain with transformation', function (t) {
   var stats = {
     age:    32,
@@ -218,6 +255,23 @@ test('filter for object', function (t) {
 
   t.plan(1)
   t.same(newObj, { weight: 100 })
+})
+
+test('mutate', function (t) {
+  var objects = [
+    {age: 1, name: "Steve"}, 
+    {age: 2, name: "Lynn"}, 
+    {age: 3, name: "Brian"}
+  ]
+  var removeOld = filtering(olderThanTwo)
+  var bumpAge   = mutating(age)
+  var capName   = mutating(capitalizeName)
+  var transform = compose([removeOld, bumpAge, capName])
+
+  mutate(transform, objects) 
+  t.plan(2)
+  t.same(objects[2].age, 4)
+  t.same(objects[2].name, "BRIAN")
 })
 
 test('transduce from obj to array', function (t) {
