@@ -19,7 +19,7 @@ var hasKeys = curry(function (keys, e) {
   var res = true
 
   for (var i = 0; i < keys.length; ++i) {
-    res = res && hasKey(keys[i], e)
+    res = res && e[keys[i]] !== undefined
   }
   return res
 })
