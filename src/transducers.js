@@ -4,7 +4,7 @@ var compose    = fns.compose
 var instanceOf = fns.instanceOf
 var trans      = {}
 
-var redIdentity = function (acc, x) { return x }
+var redNoop = function (acc, x) { return x }
 
 var reduceArray = function (fn, accum, arr) {
   var index = -1
@@ -118,7 +118,7 @@ var filter = curry(function (predFn, col) {
 })
 
 var mutate = curry(function (transFn, col) {
-  return reduce(transFn(redIdentity), undefined, col)
+  return reduce(transFn(redNoop), undefined, col)
 })
 
 var transduce = curry(function (transFn, stepFn, init, col) {

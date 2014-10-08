@@ -63,6 +63,15 @@ var remove = function (fn, array) {
   return array
 }
 
+var range = function (min, max) {
+  var ar = []
+
+  for (var i = min; i <= max; ++i) {
+    ar.push(i) 
+  }
+  return ar
+}
+
 array.find    = find
 array.forEach = forEach
 array.reverse = reverse
@@ -72,5 +81,6 @@ array.slice   = slice
 array.push    = push
 array.unshift = unshift
 array.remove  = remove
+array.range   = range
 
 module.exports = array

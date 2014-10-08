@@ -15,6 +15,7 @@ var hasKey = curry(function (key, e) {
   return e[key] !== undefined
 })
 
+//TODO: SEems to exhibit very poor performance in tight loop?
 var hasKeys = curry(function (keys, e) {
   var res = true
 
