@@ -71,36 +71,43 @@ var empty = function (col) {
   else                                    throw new Error("unknown collection type")
 }
 
-var mapping = curry(function (transFn, stepFn) {
-  return function (acc, x) {
-    return stepFn(acc, transFn(x))
+var mapping = function (transFn) {
+  return function (stepFn) {
+    return function (acc, x) {
+      return stepFn(acc, transFn(x))
+    }
   }
-})
+}
 
-var plucking = curry(function (propName, stepFn) {
-  return mapping(function (x) { return x[propName] }, stepFn)
-})
-
-var filtering = curry(function (predFn, stepFn) {
-  return function (acc, x) {
-    return predFn(x) ? stepFn(acc, x) : acc 
+var plucking = function (propName) {
+  return function (stepFn) {
+    return mapping(function (x) { return x[propName] })(stepFn)
   }
-})
+}
+
+var filtering = function (predFn) {
+  return function (stepFn) {
+    return function (acc, x) {
+      return predFn(x) ? stepFn(acc, x) : acc 
+    }
+  }
+}
 
 var checking = function (prop, val) {
   return function (stepFn) {
-    return filtering(function (x) { return x[prop] === val }, stepFn)
-    
+    return filtering(function (x) { return x[prop] === val })(stepFn)
   }
 }
 
 //THIS WILL MUTATE THE STRUCTURE PROVIDED TO IT DIRECTLY
-var mutating = curry(function (mutFn, stepFn) {
-  return function (acc, x) {
-    mutFn(x)
-    return stepFn(acc, x)
+var mutating = function (mutFn) {
+  return function (stepFn) {
+    return function (acc, x) {
+      mutFn(x)
+      return stepFn(acc, x)
+    }
   }
-})
+}
 
 var cat = function (fn) {
   return function (acc, x) {
@@ -109,15 +116,17 @@ var cat = function (fn) {
 }
 
 var map = curry(function (fn, col) {
-  return reduce(mapping(fn, cons), empty(col), col)
+  return reduce(mapping(fn)(cons), empty(col), col)
 })
 
-var mapcatting = curry(function (transFn, stepFn) {
-  return compose([cat, mapping(transFn)])(stepFn)
-})
+var mapcatting = function (transFn) {
+  return function (stepFn) {
+    return compose([cat, mapping(transFn)])(stepFn)
+  }
+}
 
 var filter = curry(function (predFn, col) {
-  return reduce(filtering(predFn, cons), empty(col), col)
+  return reduce(filtering(predFn)(cons), empty(col), col)
 })
 
 var mutate = curry(function (transFn, col) {

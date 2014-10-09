@@ -18,13 +18,12 @@ var transduce  = mod.transduce
 var sequence   = mod.sequence
 var into       = mod.into
 var mutate     = mod.mutate
-
-var addOne  = function (x) { return x + 1 }
-var gtOne   = function (x) { return x > 1 }
-var ltFifty = function (x) { return x < 50 }
-var incId   = function (n) { n.id++; return n }
-var getVal  = function (kv) { 
-  var key    = Object.keys(kv)[0]
+var addOne     = function (x) { return x + 1 }
+var gtOne      = function (x) { return x > 1 }
+var ltFifty    = function (x) { return x < 50 }
+var incId      = function (n) { n.id++; return n }
+var getVal     = function (kv) { 
+  var key = Object.keys(kv)[0]
 
   return kv[key]
 }
@@ -55,7 +54,7 @@ var contains = function (ar, el) {
 }
 
 test('mapping', function (t) {
-  var m = mapping(addOne, cons)
+  var m = mapping(addOne)(cons)
   var r = m([], 5)
   
   t.plan(2)
@@ -64,7 +63,7 @@ test('mapping', function (t) {
 })
 
 test('plucking', function (t) {
-  var m = plucking("position", cons)
+  var m = plucking("position")(cons)
   var r = m([], {position: 45})
 
   t.plan(1)
@@ -72,7 +71,7 @@ test('plucking', function (t) {
 })
 
 test('filtering', function (t) {
-  var f  = filtering(gtOne, cons)
+  var f  = filtering(gtOne)(cons)
   var r1 = f([], 5)
 
   t.plan(2)
@@ -91,7 +90,7 @@ test('checking', function (t) {
 })
 
 test('reduce for array', function (t) {
-  var m      = mapping(addOne, cons)
+  var m      = mapping(addOne)(cons)
   var array  = [1,2,3]
   var result = reduce(m, [], array)
 
@@ -100,7 +99,7 @@ test('reduce for array', function (t) {
 })
 
 test('reduce for object', function (t) {
-  var m      = mapping(bumpVal, cons)
+  var m      = mapping(bumpVal)(cons)
   var obj    = { age: 10 }
   var result = reduce(m, {}, obj)
 
@@ -163,7 +162,7 @@ test('cat', function (t) {
 
 test('mapcatting', function (t) {
   var ar  = [[1,2], [3,4], [5,6]]
-  var res = reduce(mapcatting(addOne, cons), [], ar)
+  var res = reduce(mapcatting(addOne)(cons), [], ar)
 
   t.plan(1)
   t.same(res, [2,3,4,5,6,7])
@@ -176,7 +175,7 @@ test('mutating', function (t) {
     weight: 40
   }
   var noop = function () {}
-  mutating(age, noop)(undefined, obj)
+  mutating(age)(noop)(undefined, obj)
 
   t.plan(1)
   t.same(obj.age, 22)
