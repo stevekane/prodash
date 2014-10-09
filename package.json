@@ -1,6 +1,6 @@
 {
   "name": "prodash",
-  "version": "0.0.29",
+  "version": "0.0.30",
   "description": "A functional utility library designed for composition, speed, and simplicity",
   "main": "prodash.js",
   "scripts": {
