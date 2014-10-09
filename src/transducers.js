@@ -87,9 +87,12 @@ var filtering = curry(function (predFn, stepFn) {
   }
 })
 
-var checking = curry(function (prop, val, stepFn) {
-  return filtering(function (x) { return x[prop] === val }, stepFn)
-})
+var checking = function (prop, val) {
+  return function (stepFn) {
+    return filtering(function (x) { return x[prop] === val }, stepFn)
+    
+  }
+}
 
 //THIS WILL MUTATE THE STRUCTURE PROVIDED TO IT DIRECTLY
 var mutating = curry(function (mutFn, stepFn) {

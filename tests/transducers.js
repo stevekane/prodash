@@ -81,7 +81,7 @@ test('filtering', function (t) {
 })
 
 test('checking', function (t) {
-  var f  = checking("living", true, cons)
+  var f  = checking("living", true)(cons)
   var r1 = f([], {living: true})
   var r2 = f([], {living: false})
 

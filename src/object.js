@@ -1,6 +1,6 @@
-var fns         = require("./functions")
-var curry       = fns.curry
-var object      = {}
+var fns    = require("./functions")
+var curry  = fns.curry
+var object = {}
 
 var extend = curry(function (host, obj) {
   var ks = Object.keys(obj)

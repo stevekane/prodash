@@ -21,9 +21,14 @@ test('hasKeys', function (t) {
     age:  9
   }
 
-  t.plan(2)
+  var hasNameAndAge    = hasKeys(["name", "age"])
+  var hasSchoolAndName = hasKeys(["school", "age"])
+
+  t.plan(4)
   t.true(hasKeys(['name', 'age'], obj))
   t.false(hasKeys(['school', 'name'], obj))
+  t.true(hasNameAndAge(obj))
+  t.false(hasSchoolAndName(obj))
 })
 
 test('extend', function (t) {
